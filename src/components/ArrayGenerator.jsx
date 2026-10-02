@@ -24,14 +24,14 @@ export default function ArrayGenerator({ onApply }) {
   const num = set => e => set(Number(e.target.value));
 
   return (
-    <div className="gen">
-      <h3>Array</h3>
+    <div className="panel gen">
+      <div className="ph"><h3>Input array</h3></div>
       <div className="row">
         <label>Type <select value={kind} onChange={e => setKind(e.target.value)}>{KINDS.map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></label>
         <label>Size <input type="number" min="2" max="60" value={size} onChange={e => setSize(Math.max(2, Math.min(60, Number(e.target.value) || 2)))} /></label>
         <label>Min <input type="number" value={min} onChange={num(setMin)} /></label>
         <label>Max <input type="number" value={max} onChange={num(setMax)} /></label>
-        <button onClick={make}>Generate</button>
+        <button className="primary" onClick={make}>Generate</button>
       </div>
       <div className="row">
         <label className="grow">Your own values <input type="text" placeholder="e.g. 42, 7, 19, 3, 88" value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key === 'Enter' && custom()} /></label>

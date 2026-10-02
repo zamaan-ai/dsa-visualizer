@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { graphFrames, parseEdges, adjacency } from '../algorithms/graph.js';
 import { usePlayer } from '../usePlayer.js';
-import { Player, Inspector, StepLog, ErrorText } from '../components/Lab.jsx';
+import { Player, Inspector, StepLog, ErrorText, Legend } from '../components/Lab.jsx';
 
 export default function GraphView() {
   const [n, setN] = useState(7);
@@ -30,30 +30,35 @@ export default function GraphView() {
 
   return (
     <div className="grid2">
-      <div>
-        <div className="row">
-          <label>Nodes <input type="number" min="2" max="12" value={n} onChange={e => setN(Number(e.target.value))} /></label>
-          <label className="grow">Edges <input type="text" value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key === 'Enter' && apply()} /></label>
-          <button onClick={apply}>Update graph</button>
-        </div>
-        <ErrorText text={err} />
-        <div className="row">
-          <label>Start node <input type="number" min="0" max={graph.n - 1} value={start} onChange={e => setStart(Math.max(0, Math.min(graph.n - 1, Number(e.target.value))))} /></label>
-          <button className="primary" onClick={() => run('bfs')}>Run BFS</button>
-          <button className="primary" onClick={() => run('dfs')}>Run DFS</button>
-        </div>
-        <div className="stage">
-          <svg viewBox="0 0 400 330" className="gsvg" role="img" aria-label="Undirected graph">
-            {graph.edges.map(([a, b], i) => <line key={i} x1={pts[a].x} y1={pts[a].y} x2={pts[b].x} y2={pts[b].y} className="edge" />)}
-            {pts.map((q, i) => (
-              <g key={i}><circle cx={q.x} cy={q.y} r="18" className={`nd ${cls(i)}`} /><text x={q.x} y={q.y + 5} textAnchor="middle" className="ndt">{i}</text></g>
-            ))}
-          </svg>
-        </div>
-        <div className="legend"><i className="hl" />Current <i className="fr" />In queue or stack <i className="ok" />Visited</div>
-        <Player p={p} />
+      <div className="col">
+        <section className="panel">
+          <div className="ph"><h3>Graph</h3></div>
+          <div className="row">
+            <label>Nodes <input type="number" min="2" max="12" value={n} onChange={e => setN(Number(e.target.value))} /></label>
+            <label className="grow">Edges <input type="text" value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key === 'Enter' && apply()} /></label>
+            <button onClick={apply}>Update graph</button>
+          </div>
+          <ErrorText text={err} />
+          <div className="row">
+            <label>Start node <input type="number" min="0" max={graph.n - 1} value={start} onChange={e => setStart(Math.max(0, Math.min(graph.n - 1, Number(e.target.value))))} /></label>
+            <button className="primary" onClick={() => run('bfs')}>Run BFS</button>
+            <button className="primary" onClick={() => run('dfs')}>Run DFS</button>
+          </div>
+        </section>
+        <section className="panel stagecard">
+          <div className="stage">
+            <svg viewBox="0 0 400 330" className="gsvg" role="img" aria-label="Undirected graph">
+              {graph.edges.map(([a, b], i) => <line key={i} x1={pts[a].x} y1={pts[a].y} x2={pts[b].x} y2={pts[b].y} className={`edge${f && f.visited.includes(a) && f.visited.includes(b) ? ' ok' : ''}`} />)}
+              {pts.map((q, i) => (
+                <g key={i}><circle cx={q.x} cy={q.y} r="18" className={`nd ${cls(i)}`} /><text x={q.x} y={q.y + 5} textAnchor="middle" className="ndt">{i}</text></g>
+              ))}
+            </svg>
+          </div>
+          <Legend items={[['hl', 'Current'], ['fr', 'In queue or stack'], ['ok', 'Visited']]} />
+          <Player p={p} />
+        </section>
       </div>
-      <div>
+      <div className="col">
         <Inspector msg={f && f.msg} rows={[
           ['Current node', f && f.current !== null ? f.current : 'none'],
           ['Queue or stack', f ? (f.frontier.join(', ') || 'empty') : 'not started'],

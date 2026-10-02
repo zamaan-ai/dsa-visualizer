@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { fromList, insertFrames, deleteFrames, searchFrames, traverseFrames, count, height } from '../algorithms/bst.js';
 import { usePlayer } from '../usePlayer.js';
-import { Player, Inspector, StepLog } from '../components/Lab.jsx';
+import { Player, Inspector, StepLog, Legend, Empty } from '../components/Lab.jsx';
 import ArrayGenerator from '../components/ArrayGenerator.jsx';
 
 const W = 46, H = 64;
@@ -30,34 +30,42 @@ export default function TreeView() {
 
   return (
     <div className="grid2">
-      <div>
-        <div className="row">
-          <label>Value <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} /></label>
-          <button className="primary" onClick={() => run(insertFrames)}>Insert</button>
-          <button onClick={() => run(deleteFrames)}>Delete</button>
-          <button onClick={() => { setFrames(searchFrames(base, val)); }}>Search</button>
-        </div>
-        <div className="row">
-          Traverse:
-          {[['in', 'In-order'], ['pre', 'Pre-order'], ['post', 'Post-order'], ['level', 'Level-order']].map(([k, l]) => <button key={k} onClick={() => trav(k)}>{l}</button>)}
-        </div>
-        <details><summary>Build from your own values</summary><ArrayGenerator onApply={load} /></details>
-        <div className="stage treewrap">
-          {tree ? (
-            <svg viewBox={`0 0 ${width} ${hgt}`} width={width} height={hgt} className="tsvg" style={{ minWidth: Math.min(width, cols * 30 + 20) }} role="img" aria-label="Binary search tree">
-              {edges(tree).map(([a, b]) => <line key={`${a}-${b}`} x1={at(a).x} y1={at(a).y} x2={at(b).x} y2={at(b).y} className="edge" />)}
-              {[...pos.keys()].map(v => (
-                <g key={v}>
-                  <circle cx={at(v).x} cy={at(v).y} r="17" className={`nd ${hl.includes(v) ? 'hl' : seen.includes(v) ? 'ok' : ''}`} />
-                  <text x={at(v).x} y={at(v).y + 5} textAnchor="middle" className="ndt">{v}</text>
-                </g>
-              ))}
-            </svg>
-          ) : <p className="empty">The tree is empty. Insert a value to create the root.</p>}
-        </div>
-        <Player p={p} />
+      <div className="col">
+        <section className="panel">
+          <div className="ph"><h3>Operations</h3></div>
+          <div className="row">
+            <label>Value <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} /></label>
+            <button className="primary" onClick={() => run(insertFrames)}>Insert</button>
+            <button onClick={() => run(deleteFrames)}>Delete</button>
+            <button onClick={() => { setFrames(searchFrames(base, val)); }}>Search</button>
+          </div>
+          <div className="row">
+            <span className="lbl">Traverse</span>
+            <div className="chips">
+              {[['in', 'In-order'], ['pre', 'Pre-order'], ['post', 'Post-order'], ['level', 'Level-order']].map(([k, l]) => <button key={k} className="chip" onClick={() => trav(k)}>{l}</button>)}
+            </div>
+          </div>
+          <details className="fold"><summary>Build from your own values</summary><ArrayGenerator onApply={load} /></details>
+        </section>
+        <section className="panel stagecard">
+          <div className="stage treewrap">
+            {tree ? (
+              <svg viewBox={`0 0 ${width} ${hgt}`} width={width} height={hgt} className="tsvg" style={{ minWidth: Math.min(width, cols * 30 + 20) }} role="img" aria-label="Binary search tree">
+                {edges(tree).map(([a, b]) => <line key={`${a}-${b}`} x1={at(a).x} y1={at(a).y} x2={at(b).x} y2={at(b).y} className="edge" />)}
+                {[...pos.keys()].map(v => (
+                  <g key={v}>
+                    <circle cx={at(v).x} cy={at(v).y} r="17" className={`nd ${hl.includes(v) ? 'hl' : seen.includes(v) ? 'ok' : ''}`} />
+                    <text x={at(v).x} y={at(v).y + 5} textAnchor="middle" className="ndt">{v}</text>
+                  </g>
+                ))}
+              </svg>
+            ) : <Empty icon="tree">The tree is empty. Insert a value to create the root.</Empty>}
+          </div>
+          <Legend items={[['', 'Node'], ['hl', 'Current'], ['ok', 'Visited']]} />
+          <Player p={p} />
+        </section>
       </div>
-      <div>
+      <div className="col">
         <Inspector msg={f && f.msg} rows={[
           ['Nodes', count(tree)], ['Height', height(tree)], ['Root', tree ? tree.v : 'null'],
           ['Highlighted', hl.length ? hl.join(', ') : 'none'],

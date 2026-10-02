@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { stack, queue, list, CAP } from '../algorithms/linear.js';
 import { usePlayer } from '../usePlayer.js';
-import { Player, Inspector, StepLog } from '../components/Lab.jsx';
+import { Player, Inspector, StepLog, Legend, Empty } from '../components/Lab.jsx';
 import ArrayGenerator from '../components/ArrayGenerator.jsx';
+
+const KINDS = [['stack', 'Stack', 'LIFO'], ['queue', 'Queue', 'FIFO'], ['list', 'Linked list', 'Singly']];
 
 export default function LinearView() {
   const [kind, setKind] = useState('stack');
@@ -35,47 +37,58 @@ export default function LinearView() {
 
   return (
     <div className="grid2">
-      <div>
-        <div className="row">
-          <label>Structure <select value={kind} onChange={e => { setKind(e.target.value); setFrames([]); }}>
-            <option value="stack">Stack (LIFO)</option><option value="queue">Queue (FIFO)</option><option value="list">Singly linked list</option></select></label>
-          <label>Value <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} /></label>
-          {ops.map(([label, fn]) => <button key={label} className="primary" onClick={() => run(fn)}>{label}</button>)}
-          <button onClick={() => { setFrames([]); setBase({ ...base, [kind]: [] }); }}>Clear</button>
-        </div>
-        <details><summary>Fill with your own values</summary>
-          <ArrayGenerator onApply={load} />
-        </details>
+      <div className="col">
+        <section className="panel">
+          <div className="ph"><h3>Structure</h3></div>
+          <div className="chips" role="group" aria-label="Structure">
+            {KINDS.map(([k, l, tag]) => (
+              <button key={k} className={`chip${k === kind ? ' on' : ''}`} aria-pressed={k === kind} onClick={() => { setKind(k); setFrames([]); }}>
+                {l}<small>{tag}</small>
+              </button>
+            ))}
+          </div>
+          <div className="row">
+            <label>Value <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} /></label>
+            {ops.map(([label, fn]) => <button key={label} className="primary" onClick={() => run(fn)}>{label}</button>)}
+            <button className="ghost" onClick={() => { setFrames([]); setBase({ ...base, [kind]: [] }); }}>Clear</button>
+          </div>
+          <details className="fold"><summary>Fill with your own values</summary>
+            <ArrayGenerator onApply={load} />
+          </details>
+        </section>
 
-        <div className={`stage ${kind}`}>
-          {kind === 'stack' && (
-            <div className="stackbox">
-              {[...state].map((v, i) => <div key={i} className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}{i === state.length - 1 && <em>top</em>}</div>).reverse()}
-            </div>
-          )}
-          {kind === 'queue' && (
-            <div className="queuebox">
-              {state.map((v, i) => (
-                <div key={i} className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}
-                  {i === 0 && <em>front</em>}{i === state.length - 1 && i !== 0 && <em>rear</em>}</div>
-              ))}
-            </div>
-          )}
-          {kind === 'list' && (
-            <div className="listbox">
-              {state.map((v, i) => (
-                <span className="lnode" key={i}>
-                  <div className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}{i === 0 && <em>head</em>}</div><span className="arrow">→</span>
-                </span>
-              ))}
-              <span className="nul">NULL</span>
-            </div>
-          )}
-          {!state.length && <p className="empty">Empty. Use the buttons above to add a value.</p>}
-        </div>
-        <Player p={p} />
+        <section className="panel stagecard">
+          <div className={`stage ${kind}`}>
+            {kind === 'stack' && state.length > 0 && (
+              <div className="stackbox">
+                {[...state].map((v, i) => <div key={i} className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}{i === state.length - 1 && <em>top</em>}</div>).reverse()}
+              </div>
+            )}
+            {kind === 'queue' && state.length > 0 && (
+              <div className="queuebox">
+                {state.map((v, i) => (
+                  <div key={i} className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}
+                    {i === 0 && <em>front</em>}{i === state.length - 1 && i !== 0 && <em>rear</em>}</div>
+                ))}
+              </div>
+            )}
+            {kind === 'list' && state.length > 0 && (
+              <div className="listbox">
+                {state.map((v, i) => (
+                  <span className="lnode" key={i}>
+                    <div className={`item ${hl.includes(i) ? 'hl' : ''}`}>{v}{i === 0 && <em>head</em>}</div><span className="arrow">→</span>
+                  </span>
+                ))}
+                <span className="nul">NULL</span>
+              </div>
+            )}
+            {!state.length && <Empty icon="linear">Empty. Use the buttons above to add a value.</Empty>}
+          </div>
+          <Legend items={[['', 'Element'], ['hl', 'Being touched this step']]} />
+          <Player p={p} />
+        </section>
       </div>
-      <div>
+      <div className="col">
         <Inspector msg={f && f.msg} rows={[...rows, ['Contents', state.length ? state.join(', ') : 'empty']]} />
         <StepLog frames={frames} idx={p.idx} onPick={p.jump} />
       </div>

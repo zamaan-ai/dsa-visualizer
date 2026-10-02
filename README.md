@@ -8,7 +8,7 @@ An interactive web app that demonstrates sorting algorithms and linear and non-l
 
 | Area | Included |
 |---|---|
-| Sorting | Bubble, Selection, Insertion, Merge, Quick, Heap. Live bar chart, comparison / swap / write counters, and a complexity table (best, average, worst, space, stable) |
+| Sorting | Bubble, Selection, Insertion, Merge, Quick, Heap. Live bar chart, comparison / swap / write counters, and complexity cards (best, average, worst, space, stable) |
 | Linear structures | Stack (push, pop), Queue (enqueue, dequeue), Singly linked list (insert head, insert tail, remove value, search). Overflow and underflow are handled and explained |
 | Non-linear structures | Binary search tree (insert, delete, search, in / pre / post / level-order traversal) and an undirected graph (BFS and DFS) |
 
@@ -26,6 +26,13 @@ Every algorithm and operation is recorded as a list of **frames** before it is s
 - <kbd>Space</kbd> play / pause, <kbd>←</kbd> / <kbd>→</kbd> step, <kbd>Home</kbd> / <kbd>End</kbd> first / last step
 - Each topic has its own URL (`#sort`, `#linear`, `#tree`, `#graph`), so links, refresh, and the browser back button keep your place
 - The layout adapts from phones to wide screens: controls wrap, the tree and graph scale to fit, and bar labels appear only when there is room
+
+### Design
+
+- Dark and light themes (follows your system setting on first visit; the toggle in the header remembers your choice)
+- Glass panels on a dotted grid, a violet-to-cyan accent, Space Grotesk headings and JetBrains Mono for values
+- Animated tab indicator, glowing highlights for compared / swapped / current items, and items that pop in as they are added
+- On phones the topic tabs move to a bottom bar within thumb reach; motion is turned off when the system asks for reduced motion
 
 ### Custom array generation
 
