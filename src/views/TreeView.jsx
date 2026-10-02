@@ -44,7 +44,7 @@ export default function TreeView() {
         <details><summary>Build from your own values</summary><ArrayGenerator onApply={load} /></details>
         <div className="stage treewrap">
           {tree ? (
-            <svg width={width} height={hgt} role="img" aria-label="Binary search tree">
+            <svg viewBox={`0 0 ${width} ${hgt}`} width={width} height={hgt} className="tsvg" style={{ minWidth: Math.min(width, cols * 30 + 20) }} role="img" aria-label="Binary search tree">
               {edges(tree).map(([a, b]) => <line key={`${a}-${b}`} x1={at(a).x} y1={at(a).y} x2={at(b).x} y2={at(b).y} className="edge" />)}
               {[...pos.keys()].map(v => (
                 <g key={v}>

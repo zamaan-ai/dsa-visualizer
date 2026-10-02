@@ -2,7 +2,7 @@
 
 An interactive web app that demonstrates sorting algorithms and linear and non-linear data structures in real time, with step-by-step state inspection.
 
-**Built with:** React 18 · Vite · CSS3 · JavaScript (ES modules)
+**Built with:** React 19 · Vite · CSS3 · JavaScript (ES modules)
 
 ## What it does
 
@@ -20,6 +20,12 @@ Every algorithm and operation is recorded as a list of **frames** before it is s
 - A scrubber to drag to any step, and a speed slider
 - A **state inspector** panel that explains the current step in words and shows live values (comparisons, swaps, sorted positions, top / front / head, tree height, queue or stack contents, visited nodes, adjacency list)
 - A clickable **step log**: click any line to jump straight to that step
+
+### Keyboard shortcuts and navigation
+
+- <kbd>Space</kbd> play / pause, <kbd>←</kbd> / <kbd>→</kbd> step, <kbd>Home</kbd> / <kbd>End</kbd> first / last step
+- Each topic has its own URL (`#sort`, `#linear`, `#tree`, `#graph`), so links, refresh, and the browser back button keep your place
+- The layout adapts from phones to wide screens: controls wrap, the tree and graph scale to fit, and bar labels appear only when there is room
 
 ### Custom array generation
 
@@ -64,7 +70,8 @@ src/
     Lab.jsx          Player controls, State inspector, Step log
     ArrayGenerator.jsx
   views/             One view per topic (Sorting, Linear, Tree, Graph)
-  usePlayer.js       Hook that replays frames (play, pause, step, scrub)
+  usePlayer.js       Hook that replays frames (play, pause, step, scrub, keyboard)
+  useWidth.js        Hook that reports an element's width (ResizeObserver)
   App.jsx, main.jsx, styles.css
 tests/algorithms.test.js
 ```

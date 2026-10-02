@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { stack, queue, list, CAP } from '../algorithms/linear.js';
 import { usePlayer } from '../usePlayer.js';
 import { Player, Inspector, StepLog } from '../components/Lab.jsx';
@@ -10,7 +10,6 @@ export default function LinearView() {
   const [frames, setFrames] = useState([]);
   const [val, setVal] = useState(7);
   const p = usePlayer(frames);
-  useEffect(() => setFrames([]), [kind]);
 
   const f = frames.length ? p.frame : null;
   const state = f ? f.state : base[kind];
@@ -38,7 +37,7 @@ export default function LinearView() {
     <div className="grid2">
       <div>
         <div className="row">
-          <label>Structure <select value={kind} onChange={e => setKind(e.target.value)}>
+          <label>Structure <select value={kind} onChange={e => { setKind(e.target.value); setFrames([]); }}>
             <option value="stack">Stack (LIFO)</option><option value="queue">Queue (FIFO)</option><option value="list">Singly linked list</option></select></label>
           <label>Value <input type="number" value={val} onChange={e => setVal(Number(e.target.value))} /></label>
           {ops.map(([label, fn]) => <button key={label} className="primary" onClick={() => run(fn)}>{label}</button>)}
